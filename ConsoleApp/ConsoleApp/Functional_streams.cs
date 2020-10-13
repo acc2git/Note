@@ -49,7 +49,7 @@ namespace ConsoleApp
         public static Stream<T> Cycle<T>(IEnumerable<T> a)
         {
             var a0 = a.First();
-            return Cons(a0, () => Cycle(a.Skip(1).ConcatOne(a0)));
+            return Cons(a0, () => Cycle(a.Skip(1).ConcatItem(a0)));
         }
 
         // Construct a stream by counting numbers starting from a given one.
@@ -152,14 +152,6 @@ namespace ConsoleApp
         {
             s = s.Tail.Value;
             return s;
-        }
-        public static IEnumerable<T> ConcatOne<T>(this IEnumerable<T> src, T e)
-        {
-            foreach (var s in src)
-            {
-                yield return s;
-            }
-            yield return e;
         }
 
         private static bool IsPrime(int num, List<int> primes)
