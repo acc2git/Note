@@ -33,6 +33,7 @@ namespace ConsoleApp
 
         public static IEnumerable<T> ConcatItem<T>(this IEnumerable<T> src, T item)
         {
+            // .NET Core use Append
             foreach (var s in src)
                 yield return s;
             yield return item;

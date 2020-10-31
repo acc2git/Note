@@ -49,7 +49,7 @@ namespace ConsoleApp
         public static Stream<T> Cycle<T>(IEnumerable<T> a)
         {
             var a0 = a.First();
-            return Cons(a0, () => Cycle(a.Skip(1).ConcatItem(a0)));
+            return Cons(a0, () => Cycle(a.Skip(1).Append(a0)));
         }
 
         // Construct a stream by counting numbers starting from a given one.
