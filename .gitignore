@@ -356,3 +356,9 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/OdsTest2/OdsTest2.sln
+/OdsTest2/OdsTest2/Properties/AssemblyInfo.cs
+/OdsTest2/OdsTest2/Program.cs
+/OdsTest2/OdsTest2/packages.config
+/OdsTest2/OdsTest2/OdsTest2.csproj
+/OdsTest2/OdsTest2/App.config
