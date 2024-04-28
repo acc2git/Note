@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ConsoleApp.codewar
 {
@@ -8,36 +8,16 @@ namespace ConsoleApp.codewar
 	{
 		public static string[] CreateReport(string[] vals)
 		{
-			bool isValid = true;
-			IEnumerable<string> summaryToOutput()
-			{
-				foreach (var s in ParseToRecords(vals).GroupBy(x => x.name).OrderBy(g => g.Key))
-				{
-					isValid = isValid && s.All(x => x.isValid);
-					yield return s.Key;
-					yield return s.Sum(x => x.cnt).ToString();
-				}
-			};
-			var result = summaryToOutput().ToArray();
-			return isValid ? result : new string[] { "Disqualified data" };
-		}
+			if (vals.Any(duck => Regex.IsMatch(duck, @"(?i)Labrador\s+Duck"))) // case-insensitive
+				return new string[] { "Disqualified data" };
 
-		private static IEnumerable<(string name, bool isValid, int cnt)> ParseToRecords(string[] vals)
-		{
-			foreach (string val in vals)
-			{
-				var tokens = val.ToUpper().Split(new char[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries);
-				var words = tokens.Take(tokens.Length - 1).ToArray();
-				int cnt = Int32.Parse(tokens[^1]);
-				yield return (SixLetterCode(words), IsValid(words), cnt);
-			}
-		}
-
-		private static bool IsValid(string[] words)
-		{
-			if (words.Length != 2)
-				return true;
-			return words[0] != "LABRADOR" || words[1] != "DUCK";
+			return vals
+				.Select(x => x.ToUpper().Split(new char[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries))
+				.Select(tokens => new { name = SixLetterCode(tokens[0..^1]), cnt = int.Parse(tokens[^1]) })
+				.GroupBy(x => x.name)
+				.OrderBy(g => g.Key)
+				.SelectMany(r => new string[] { r.Key, r.Sum(x => x.cnt).ToString() })
+				.ToArray();
 		}
 
 		private static string SixLetterCode(string[] words)
