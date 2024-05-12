@@ -5,31 +5,38 @@ namespace ConsoleApp
 {
 	public class PrimesCounter
 	{
-		List<int> _primes = new List<int> { };
-		int nextIdx = 0;
+		private HashSet<long> _primes = new HashSet<long> { 2 };
+		private long last = 1;
+		private long[] wheel = new long[] { 2, 4 };
+		private int wheelIndex = 0;
 
-		public int Next()
+		public long Next()
 		{
-			if (nextIdx >= 0 && nextIdx < _primes.Count)
-				return _primes[nextIdx++];
-
-			int num = _primes.Count > 0 ? _primes[^1] + 1 : 2;
+			long num = GetNextTry(last);
 			while (!IsPrime(num))
-				num++;
+				num = GetNextTry(num);
 
 			_primes.Add(num);
-			return _primes[nextIdx++];
+			last = num;
+			return num;
 		}
 
-		public IEnumerable<int> Enumerate()
+		private long GetNextTry(long num)
+		{
+			if (num < 5)
+				return num + 1;
+			long result = num + wheel[wheelIndex];
+			wheelIndex = (wheelIndex + 1) % wheel.Length;
+			return result;
+		}
+
+		public IEnumerable<long> Enumerate()
 		{
 			while (true)
 				yield return Next();
 		}
 
-		public void ResetIdx() => nextIdx = 0;
-
-		private bool IsPrime(int num)
+		private bool IsPrime(long num)
 		{
 			if (num < 2)
 				return false;
@@ -37,12 +44,12 @@ namespace ConsoleApp
 			if (_primes.Contains(num))
 				return true;
 
-			int m = (int)Math.Sqrt(num);
-			foreach (var p in _primes)
+			long sqrt = (long)Math.Sqrt(num);
+			foreach (var prime in _primes)
 			{
-				if (p > m)
+				if (prime > sqrt)
 					break;
-				if (num % p == 0)
+				if (num % prime == 0)
 					return false;
 			}
 			return true;
